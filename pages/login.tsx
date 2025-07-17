@@ -1,35 +1,30 @@
-import { useState } from 'react';
 import supabase from '../lib/supabaseClient';
 
-
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault();
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+  const handleGoogleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
     });
-    if (error) alert(error.message);
-    else alert('Logged in!');
-  }
+
+    if (error) {
+      alert('Login failed: ' + error.message);
+    }
+  };
 
   return (
-    <form onSubmit={handleLogin} style={{ padding: '2rem' }}>
-      <h2>Login</h2>
-      <input
-        placeholder="Email"
-        type="email"
-        onChange={(e) => setEmail(e.target.value)}
-      /><br />
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      /><br />
-      <button type="submit">Login</button>
-    </form>
+    <div style={{ padding: '2rem', textAlign: 'center' }}>
+      <h2>Login with Google</h2>
+      <p>You must log in using your @captivaco.com email</p>
+      <button
+        onClick={handleGoogleLogin}
+        style={{
+          padding: '0.75rem 1.5rem',
+          fontSize: '1rem',
+          cursor: 'pointer',
+        }}
+      >
+        Continue with Google
+      </button>
+    </div>
   );
 }
